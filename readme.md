@@ -223,7 +223,7 @@ ${API_URL} \
 
 Acknowledgment
 -------
-* [oubiwann/txjsonrpc](https://github.com/oubiwann/txjsonrpc)
-* [flowroute/txjason](https://github.com/flowroute/txjason) 
-* [NCMI/jsonrpc](https://github.com/NCMI/jsonrpc) 
-* [tadeas/fastjsonrpc](https://github.com/tadeas/fastjsonrpc) 
+* Duncan McGreggor - [oubiwann/txjsonrpc](https://github.com/oubiwann/txjsonrpc)
+* Aaron Gallagher - [flowroute/txjason](https://github.com/flowroute/txjason) 
+* Ed Langley - [NCMI/jsonrpc](https://github.com/NCMI/jsonrpc) 
+* Jakub Matys - [tadeas/fastjsonrpc](https://github.com/tadeas/fastjsonrpc) 
