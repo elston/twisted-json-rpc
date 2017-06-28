@@ -26,7 +26,7 @@ Features
 
 * Router method may be expanded to Class (like Django as_view)
 
-* Tested for Python 2.7
+* Python 2 and 3 supported (tested Python 2.7)
 
 
 First release server usage (simple)
@@ -226,3 +226,4 @@ Acknowledgment
 * [oubiwann/txjsonrpc](https://github.com/oubiwann/txjsonrpc)
 * [flowroute/txjason](https://github.com/flowroute/txjason) 
 * [NCMI/jsonrpc](https://github.com/NCMI/jsonrpc) 
+* [tadeas/fastjsonrpc](https://github.com/tadeas/fastjsonrpc) 
