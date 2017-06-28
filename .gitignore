@@ -1,0 +1,10 @@
+*.pyc
+*.pid
+*.pem
+
+.env
+.logs
+.containers
+__pycache__
+
+
