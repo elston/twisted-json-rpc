@@ -78,6 +78,7 @@ class JSONRPCDirect(object):
         self._init_request_resource(request)
         self._init_request_method(request)
         # ...
+        request.content.seek(0, 0)
         rdata = yield self._init_json_data(request.content)
         # ...
         params = self._get_params(rdata)
