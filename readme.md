@@ -14,6 +14,8 @@ Features
 
 * Only JSON-RPC 2.0 compliant
 
+* Only POST method
+
 * Only root resource
 
 * Without any batch operations for the server (one request - one method  - one response)
