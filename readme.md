@@ -108,7 +108,7 @@ Second release server usage
 ------------
 
 
-1. Define a calss of method:
+1. Define a class of method:
 
 ```python
 from twisted.internet import defer
