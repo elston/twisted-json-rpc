@@ -27,7 +27,7 @@ Features
 * Tested for Python 2.7
 
 
-First release server usage
+First release server usage (simple)
 ------------
 
 
@@ -104,7 +104,7 @@ ${API_URL} \
 }
 ```
 
-Second release server usage
+Second release server usage (as_view)
 ------------
 
 
