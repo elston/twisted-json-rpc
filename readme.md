@@ -22,7 +22,9 @@ Features
 
 * Param only dict
 
-* Fully compliant for names with request param and method param
+* Total control incoming request param names 
+
+* Fully test compliance incoming request param names with param names of method API (even if this method is deferrable :))
 
 * Router method may be expanded to Class (like Django as_view)
 
