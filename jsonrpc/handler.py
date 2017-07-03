@@ -22,12 +22,12 @@ class Router(object):
     def __init__(self, ns=None):
         self.ns = self._init_ns(ns)
 
-    def _init_ns(self,ns):
+    def _init_ns(self, ns):
         # ..
-        result = []
+        result = ''
         # ..
         if ns and isinstance(ns, basestring):
-            result = [ns]
+            result = ns
         # ..
         return result
     # ...
@@ -37,8 +37,7 @@ class Router(object):
             # ...
             json_sig = getattr(m, JSON_SIG, None)
             if json_sig:
-                self.ns.append(json_sig)
-                name = SEPERATOR.join(self.ns)
+                name = '{}{}{}'.format(self.ns, SEPERATOR, json_sig)
                 params = getattr(m, JSON_ARGS)
                 # ..
                 direct.register(m, name, params)

@@ -32,12 +32,14 @@ class JSONRPCError(Exception):
         }
 
         # ..data
-        if self.data:
-            error['data'] = self.data
+        data = getattr(self,'data', None)
+        if data:
+            error['data'] = data
 
         # ..status
-        if self.status:
-            error['status'] = self.status
+        status = getattr(self,'status', None)
+        if status:
+            error['status'] = status
 
         # ...debug
         error['stack'] = traceback.format_exc()
@@ -147,3 +149,13 @@ class NotAllowedMethodError(JSONRPCError):
     code = http.NOT_ALLOWED
     message = 'Not Allowed Method'
     status = http.NOT_ALLOWED    
+
+
+class OperatorError(JSONRPCError):
+
+    code = http.INTERNAL_SERVER_ERROR
+    message = 'Error from operator'
+    status = http.INTERNAL_SERVER_ERROR
+
+    def __init__(self, data=None):
+        self.data = data    
