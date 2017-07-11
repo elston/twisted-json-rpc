@@ -2,7 +2,7 @@
 import collections
 import inspect
 import re
-import importlib 
+import importlib
 import types
 # ...
 from decorator import decorator
@@ -14,6 +14,7 @@ SEPERATOR = '.'
 # ...
 JSON_SIG = '_json_sig'
 JSON_ARGS = '_json_args'
+JSON_ARGS_DEFAULTS = '_json_args_defaults'
 # ..
 INVARIANTA = (b'self',b'request')
 
@@ -38,9 +39,10 @@ class Router(object):
             json_sig = getattr(m, JSON_SIG, None)
             if json_sig:
                 name = '{}{}{}'.format(self.ns, SEPERATOR, json_sig)
-                params = getattr(m, JSON_ARGS)
+                args = getattr(m, JSON_ARGS)
+                args_defaults = getattr(m, JSON_ARGS_DEFAULTS)
                 # ..
-                direct.register(m, name, params)
+                direct.register(m, name, args, args_defaults)
 
 
 
@@ -48,11 +50,26 @@ class Router(object):
 def _conspect_name(func, name):
     setattr(func, JSON_SIG, name)
 
-def _conspect_param(func_to,func_from):
+def _conspect_param(func_to, func_from):
     inv = INVARIANTA
     args = filter(lambda x: not x in inv, inspect.getargspec(func_from).args)
     setattr(func_to, JSON_ARGS, args)  
-                  
+
+def _conspect_param_defaults(func_to, func_from):
+    # ..
+    result = {}
+    defaults = inspect.getargspec(func_from).defaults    
+    if defaults:
+        # ..
+        args = inspect.getargspec(func_from).args    
+        # ..
+        defaults_enum = list(enumerate(defaults))
+        defaults_length = len(defaults_enum)
+        result = dict((args[-defaults_length + id],value) 
+            for id, value in defaults_enum)
+    # ...
+    setattr(func_to, JSON_ARGS_DEFAULTS, result)  
+
 # ...
 # ...
 # ...
@@ -98,13 +115,15 @@ def as_view(path):
             # ...
             module = importlib.import_module(path_name)
             Klass = getattr(module,klass_name)
-            klass = Klass(request,*args, **kwargs)
+            klass = Klass(router, request,*args, **kwargs)
             # ..
             result = yield defer.maybeDeferred(klass)            
             defer.returnValue(result)
         # ..
-        _conspect_name(wrapper, klass_name)        
+        # _conspect_name(wrapper, klass_name)
+        _conspect_name(wrapper, func.__name__)        
         _conspect_param(wrapper, func)
+        _conspect_param_defaults(wrapper, func)        
         return wrapper
     return decorator        
 

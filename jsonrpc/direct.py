@@ -29,7 +29,7 @@ class JSONRPCDirect(object):
         b'method',
     )
 
-    RESULT_SIG = 'result'
+    RESULT_SIG = b'result'
 
     # ..
     def __init__(self):
@@ -39,12 +39,13 @@ class JSONRPCDirect(object):
     # ...
     # ...
     # ...
-    def register(self, method, name, params):
+    def register(self, method, name, params, params_defaults):
         # ..
 
         self.methods[name] = {
             'method':method,
             'params':params,            
+            'defaults':params_defaults,
         }
 
 
@@ -55,8 +56,8 @@ class JSONRPCDirect(object):
     def response(self,result):
         # ...
         response =  {
-            "id": b"1",
-            "jsonrpc": self.DEFAULT_JSONRPC
+            'id': b'1',
+            'jsonrpc': self.DEFAULT_JSONRPC
         }
         # ..
         response.update(result)
@@ -78,8 +79,7 @@ class JSONRPCDirect(object):
         self._init_request_resource(request)
         self._init_request_method(request)
         # ...
-        request.content.seek(0, 0)
-        rdata = yield self._init_json_data(request.content)
+        rdata = yield self._init_json_data(request)
         # ...
         params = self._get_params(rdata)
         method = self._get_method(rdata)
@@ -105,9 +105,10 @@ class JSONRPCDirect(object):
             raise errors.NotAllowedMethodError()
 
     @defer.inlineCallbacks        
-    def _init_json_data(self,content):
+    def _init_json_data(self,request):
         # ...
-        string = yield content.read()
+        request.content.seek(0, 0)
+        string = yield request.content.read()
         rdata = yield json.loads(string)
 
         # ..test dict
@@ -161,15 +162,25 @@ class JSONRPCDirect(object):
                 '"params" field must be dict'
             )
 
-        if not set(params.keys()) == set(method['params']):
-            errstr = 'params must be empty'
-            if len(method['params']):
-                errstr = 'params must contain "{params}"'.format(
-                    params = ', '.join(method['params'])
-                )
-            # ..
-            raise errors.ParseError(errstr)            
-        # ...
+        # ..
+        errstr = 'params must be empty'
+        if len(method['params']):
+            errstr = 'params must contain "{params}"'.format(
+                params = ', '.join(method['params'])
+            )
+
+        # ..1. total
+        if not set(params.keys()).issubset(set(method['params'])):
+            raise errors.ParseError(errstr)
+        
+        # ...2. const
+        const_request_args = set(params.keys()) - set(method['defaults'].keys())
+        const_method_args = set(method['params']) - set(method['defaults'].keys())
+        if not const_request_args == const_method_args:
+            raise errors.ParseError(errstr)
+
+        # ..
+
         defer.returnValue(rdata)
 
 
