@@ -26,6 +26,8 @@ Features
 
 * Fully test compliance incoming request param names with param names of method API (even if this method is deferrable :))
 
+* Support default json-rpc method parameters (value=None or other..)
+
 * Router method may be expanded to Class (like Django as_view)
 
 * Python 2 and 3 supported (tested Python 2.7)
@@ -121,7 +123,7 @@ from jsonrpc import errors
 class Add(object):
 
     # ...
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, router, request, *args, **kwargs):
         self.x = kwargs['x']
         self.y = kwargs['y']
 
@@ -134,7 +136,7 @@ class Add(object):
 class Sub(object):
 
     # ...
-    def __init__(self, request, *args, **kwargs):
+    def __init__(self, router, request, *args, **kwargs):
         self.x = kwargs['x']
         self.y = kwargs['y']
 
